@@ -49,7 +49,7 @@
   ".pm":          {"name": "perl", "symbol": "#"},
   ".pod":         {"name": "perl", "symbol": "#"},
   ".pp":          {"name": "delphi", "symbol": "//"},
-  ".py":          {"name": "python", "symbol": "#"},
+  ".py":          {"name": "python", "symbol": "#", "mlstart": "\"\"\"", "mlend": "\"\"\""},
   ".rb":          {"name": "ruby", "symbol": "#"},
   ".tex":         {"name": "tex", "symbol": "%"},
   ".scala":       {"name": "scala", "symbol": "//"},

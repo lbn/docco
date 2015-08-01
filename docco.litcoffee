@@ -138,14 +138,24 @@ normal below.
             isText = yes
             lang.symbol + ' ' + line
 
+      multiline = false
       for line in lines
-        if line.match(lang.commentMatcher) and not line.match(lang.commentFilter)
+        if line.match(lang.mlStartMatcher) and not multiline
+          multiline = true
+        else if line.match(lang.mlEndMatcher) and multiline
+          multiline = false
+        else if multiline
           save() if hasCode
-          docsText += (line = line.replace(lang.commentMatcher, '')) + '\n'
+          docsText += line.replace(/^\s+/, '') + '\n'
           save() if /^(---+|===+)$/.test line
         else
-          hasCode = yes
-          codeText += line + '\n'
+          if line.match(lang.commentMatcher) and not line.match(lang.commentFilter)
+            save() if hasCode
+            docsText += (line = line.replace(lang.commentMatcher, '')) + '\n'
+            save() if /^(---+|===+)$/.test line
+          else
+            hasCode = yes
+            codeText += line + '\n'
       save()
 
       sections
@@ -292,6 +302,8 @@ Build out the appropriate matchers and delimiters for each language.
 Does the line begin with a comment?
 
         l.commentMatcher = ///^\s*#{l.symbol}\s?///
+        l.mlStartMatcher = ///^\s*#{l.mlstart}\s?///
+        l.mlEndMatcher = ///^\s*#{l.mlend}\s?///
 
 Ignore [hashbangs](http://en.wikipedia.org/wiki/Shebang_%28Unix%29) and interpolations...
 
